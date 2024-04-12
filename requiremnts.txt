@@ -1,0 +1,7 @@
+django
+djangorestframework
+scrapy
+virtualenv
+psycopg
+markdown
+django-filter
