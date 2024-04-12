@@ -71,9 +71,10 @@ class BusinessRegisterSpider(scrapy.Spider):
         Returns:
             list: Extracted info
         """
-        table = [] 
+        table = {} 
         for param in params:
-            table.append(data.get(param, "UNDEFINED"))
+            item = data.get(param, "UNDEFINED")
+            table[param] = item
         return table 
 
     def parse(self, response):
