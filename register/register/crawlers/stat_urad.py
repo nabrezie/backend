@@ -19,6 +19,16 @@ class SlovakStatisticsSpider(scrapy.Spider):
                  type="json",
                  *args,
                  **kwargs):
+        """_summary_
+
+        Args:
+            url (_type_, optional): URL. Defaults to DEF_URL.
+            cube_code (_type_, optional): Table id. Defaults to None.
+            params (list, optional): params to specify query. Defaults to [].
+            to_extract (list, optional): what information to extract. Defaults to [].
+            lang (str, optional): language ("en" | "sk"). Defaults to "sk".
+            type (str, optional): type of file. Defaults to "json".
+        """
         super(SlovakStatisticsSpider, self).__init__(*args, **kwargs)
         if url == ALL_TABLES:
             self.start_url = url
