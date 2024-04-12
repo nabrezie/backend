@@ -5,3 +5,4 @@ virtualenv
 psycopg
 markdown
 django-filter
+psycopg2
