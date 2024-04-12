@@ -79,9 +79,11 @@ class BusinessRegisterSpider(scrapy.Spider):
 
     def parse(self, response):
         data = response.json() 
+        extracted_data = []
         for d in data:
             extracted = self.extract_table(d, self.to_extract)
-            print(extracted)
+            extracted_data.append(extracted)
+        return extracted_data
 
 if __name__ == "__main__":
     process = CrawlerProcess()
@@ -90,4 +92,8 @@ if __name__ == "__main__":
                   to_extract=["id", "established_on"], 
                   query="sync?last_id=2142424")
     process.start()
+
+    spider = BusinessRegisterSpider()
+    extracted = spider.parse()
+    print(extracted)
 
