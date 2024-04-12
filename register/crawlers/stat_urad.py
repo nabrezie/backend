@@ -61,32 +61,21 @@ class SlovakStatisticsSpider(scrapy.Spider):
     def start_requests(self):
         yield scrapy.Request(url=self.start_url, callback=self.parse)
     
-    def extract_table(self, data) -> list:
+    def extract_table(self, data) -> dict:
         """Extracts useful info from a table
 
         Args:
             data (json): data to extract the table from
             params (list, optional): Information to extract - check KEYS. Defaults to [].
+        
+        Returns:
+            dict: Extracted info {param: value}
         """
         table = {}
         for param in self.to_extract:
             item = data.get(param, "UNDEFINED")
             table[param] = item
         return table
-
-    def parse_all_tables(self, response) -> list:
-        """Should parse a list of every table available at ALL_TABLES
-
-        Args:
-            response (_type_): response from the request
-        """
-        data = response.json()
-        datasets = data.get("link", {}).get("item", [])
-        extracted_data = []
-        for dataset in datasets:
-            extracted = self.extract_table(dataset)
-            extracted_data.append(extracted)
-        return extracted_data
 
     def parse(self, response) -> list:
         """ Parse response
@@ -95,22 +84,23 @@ class SlovakStatisticsSpider(scrapy.Spider):
             response (): response from the request
         """
         data = response.json()
-        extracted_data = []
         if response.url == ALL_TABLES:
-            extracted = self.parse_all_tables(response)
+            extracted = []
+            datasets = data.get("link", {}).get("item", [])
+            for dataset in datasets:
+                extracted.append(self.extract_table(dataset))   
         else:
             extracted = self.extract_table(data)
-        extracted_data.append(extracted)
-        return extracted_data 
+        return extracted
 
 if __name__ == "__main__":
     process = CrawlerProcess()
-    process.crawl(SlovakStatisticsSpider,
-                  cube_code="np3106rr",
-                  params=["SK021", "2016,2017,2018", "E_PRIEM_HR_MZDA"],
-                  to_extract=['version', 'label'],
-                  lang="sk",
-                  )
-    # process.crawl(SlovakStatisticsSpider, url=ALL_TABLES, to_extract=["href", "label"])
+    # process.crawl(SlovakStatisticsSpider,
+    #               cube_code="np3106rr",
+    #               params=["SK021", "2016,2017,2018", "E_PRIEM_HR_MZDA"],
+    #               to_extract=['version', 'label'],
+    #               lang="sk",
+    #               )
+    process.crawl(SlovakStatisticsSpider, url=ALL_TABLES, to_extract=["version", "label"])
     process.start()
 
