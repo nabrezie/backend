@@ -93,7 +93,4 @@ if __name__ == "__main__":
                   query="sync?last_id=2142424")
     process.start()
 
-    spider = BusinessRegisterSpider()
-    extracted = spider.parse()
-    print(extracted)
 

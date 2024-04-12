@@ -68,28 +68,13 @@ class SlovakStatisticsSpider(scrapy.Spider):
             data (json): data to extract the table from
             params (list, optional): Information to extract - check KEYS. Defaults to [].
         """
-        # href = data.get("href", "")
-        # label = data.get("label", "")
-        # update = data.get("update", "")
-        # dimensions = data.get("dimension", "")
-
-        # print("href:", href)
-        # print("label:", label)
-        # print("last Updated:", update)
-        table = []
+        table = {}
         for param in self.to_extract:
-            table.append(data.get(param, "UNDEFINED"))
+            item = data.get(param, "UNDEFINED")
+            table[param] = item
         return table
-        # for _, dim_value in dimensions.items():
-        #     dim_label = dim_value.get("label", "")
-        #     dim_note = dim_value.get("note", "")
-        #     dim_href = dim_value.get("href", "")
-        #     print("dimension label:", dim_label)
-        #     print("dimension note:", dim_note)
-        #     print("dimension href:", dim_href)
-        #     print("\n")
 
-    def parse_all_tables(self, response):
+    def parse_all_tables(self, response) -> list:
         """Should parse a list of every table available at ALL_TABLES
 
         Args:
@@ -97,24 +82,27 @@ class SlovakStatisticsSpider(scrapy.Spider):
         """
         data = response.json()
         datasets = data.get("link", {}).get("item", [])
+        extracted_data = []
         for dataset in datasets:
             extracted = self.extract_table(dataset)
-            print(extracted)
+            extracted_data.append(extracted)
+        return extracted_data
 
-    def parse(self, response):
+    def parse(self, response) -> list:
         """ Parse response
 
         Args:
             response (): response from the request
         """
         data = response.json()
+        extracted_data = []
         if response.url == ALL_TABLES:
             extracted = self.parse_all_tables(response)
         else:
             extracted = self.extract_table(data)
-        print(extracted)
+        extracted_data.append(extracted)
+        return extracted_data 
 
-    
 if __name__ == "__main__":
     process = CrawlerProcess()
     process.crawl(SlovakStatisticsSpider,
