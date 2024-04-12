@@ -58,18 +58,21 @@ class BusinessRegisterSpider(scrapy.Spider):
         self.to_extract = to_extract
     
     def start_requests(self):
+        """ Starts the request
+
+        """
         yield scrapy.Request(url=self.start_url, callback=self.parse)
 
      # handling data
-    def extract_table(self, data: dict, params=[]) -> list:
-        """Extracts useful info from a table and returns it as a list
+    def extract_table(self, data: dict, params=[]) -> dict:
+        """Extracts useful info from a table and returns it as a dictionary
 
         Args:
             data (dict): given data
             params (list, optional): Information to extract - check KEYS. Defaults to [].
 
         Returns:
-            list: Extracted info
+            dict: Extracted info {param: value}
         """
         table = {} 
         for param in params:
@@ -77,7 +80,18 @@ class BusinessRegisterSpider(scrapy.Spider):
             table[param] = item
         return table 
 
-    def parse(self, response):
+    def parse(self, response) -> list:
+        """Parses the response and returns the extracted data
+
+        Args:
+            response (_type_): Response 
+
+        Returns:
+            list: Extracted data
+        """
+        if response.status != 200:
+            print("Error with the response, status code:", response.status)
+            return
         data = response.json() 
         extracted_data = []
         for d in data:
