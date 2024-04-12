@@ -103,7 +103,7 @@ if __name__ == "__main__":
     process = CrawlerProcess()
     process.crawl(BusinessRegisterSpider,
                   register="RPO",
-                  to_extract=["id", "established_on"], 
+                  to_extract=KEYS,
                   query="sync?last_id=2142424")
     process.start()
 
