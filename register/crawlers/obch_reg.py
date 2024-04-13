@@ -97,8 +97,17 @@ class BusinessRegisterSpider(scrapy.Spider):
         for d in data:
             extracted = self.extract_table(d, self.to_extract)
             extracted_data.append(extracted)
-        return extracted_data
+        self.save_parsed_data(extracted_data)
 
+    def save_parsed_data(self, data: list):
+        """Saves the parsed data to a file
+
+        Args:
+            data (list): Parsed data
+        """
+        with open("data.json", "w") as f:
+            json.dump(data, f, indent=4)
+    
 if __name__ == "__main__":
     process = CrawlerProcess()
     process.crawl(BusinessRegisterSpider,
@@ -106,5 +115,3 @@ if __name__ == "__main__":
                   to_extract=KEYS,
                   query="sync?last_id=2142424")
     process.start()
-
-

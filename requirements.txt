@@ -5,7 +5,3 @@ virtualenv
 psycopg
 markdown
 django-filter
-pandas
-pandasql
-nltk
-xlrd
