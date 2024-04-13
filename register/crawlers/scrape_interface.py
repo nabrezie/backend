@@ -1,5 +1,5 @@
 """
-     This interface is used to scrape data from various sources. It provides a method to scrape data from a given source.
+     This interface is used to scrape data from various sources. It provides a method to scrape data from a given source. Currently it supports two sources: Obchodny register SR and Statisticky urad SR
 
     Example usage:
     # interface.scrape_data(source="BusinessRegister", register="RPO", to_extract=KEYS, query="sync?last_id=2142424")
