@@ -1,19 +1,36 @@
 class JSONtoSQLParser:
     def __init__(self, json_data):
+        """ Initializes the JSON to SQL parser
+
+        Args:
+            json_data (_type_): json data to parse
+        """
         self.json_data = json_data
         self.sql_queries = []
 
     def parse(self, table_name):
+        """ Parses the JSON data
+
+        Args:
+            table_name (_type_): the main table name in the database
+        """
         self.parse_main_table(table_name)
         self.parse_nested_tables()
 
     def parse_main_table(self, table_name):
+        """ Parses the main table from the JSON data
+
+        Args:
+            table_name (_type_): the main table name in the database
+        """
         main_table_columns = [key for key, value in self.json_data.items() if not isinstance(value, (dict, list))]
         main_table_sql = f"INSERT INTO {table_name} ({', '.join(main_table_columns)}) VALUES ({', '.join(['%s'] * len(main_table_columns))});"
         main_values = tuple(self.json_data.get(key) for key in main_table_columns)
         self.sql_queries.append((main_table_sql, main_values))
 
     def parse_nested_tables(self):
+        """ Parses the nested tables from the JSON data if any
+        """
         nested_keys = [key for key, value in self.json_data.items() if isinstance(value, list)]
         for key in nested_keys:
             for entry in self.json_data[key]:
@@ -22,7 +39,15 @@ class JSONtoSQLParser:
                 values = tuple(entry.values())
                 self.sql_queries.append((sql, values))
 
-    def generate_sql_queries(self, table_name="organizations"):
+    def generate_sql_queries(self, table_name="organizations") -> list:
+        """ Generates the SQL queries
+
+        Args:
+            table_name (str, optional): the main table name. Defaults to "organizations".
+
+        Returns:
+            (list): SQL queries as a list
+        """
         self.parse(table_name)
         return self.sql_queries
 
@@ -79,8 +104,7 @@ json_data = {
     ]
 }
 
-# Create an instance of JSONtoSQLParser
 parser = JSONtoSQLParser(json_data)
 
-# Generate SQL queries and print them
-print(parser.generate_sql_queries("kokot"))
+query = parser.generate_sql_queries(table_name="some_table_name")
+print(query)
