@@ -8,8 +8,8 @@
 
 
     Raises:
-        NotImplementedError: _description_
-        ValueError: _description_
+        NotImplementedError: needs to be implemented 
+        ValueError: 
 """
 import scrapy
 from scrapy.crawler import CrawlerProcess
